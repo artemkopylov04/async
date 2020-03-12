@@ -16,56 +16,34 @@
             equal
         } = Homework;
 
-        const cb = (array, res) => console.log(res);
+        const cb = (res) => {
+            console.log(new Date().toLocaleString());
+            console.log(res);
+        }
 
-        const getOddSum = function (array, cb) {
+        const getOddSum = (array, cb) => {
             let summ = 0;
 
             (async function iterate() {
-                const value = await new Promise ((resolve, reject) => {
-                    array.pop((res) => resolve(res));
-                });
-
-                const undef = await new Promise ((resolve, reject) => {
-                    equal(value, undefined, (res) => resolve(res));
-                });
-
-                if (undef) {
-                    cb(array, summ);
-                } else {
-                    const moddedValue = await new Promise ((resolve, reject) => {
-                        mod(value, 2, (res) => resolve(res));
-                    });
-
-                    const odded = await new Promise ((resolve, reject) => {
-                        equal(moddedValue, 1, (res) => resolve(res));
-                    });
-
-                    if (odded) {
-                        summ = await new Promise ((resolve, reject) => {
-                            add(summ, value, (res) => resolve(res));
-                        });
-                    }
+                const value = await new Promise ((resolve, reject) => (array.pop((res) => resolve(res))));
+                if (value) {
 
                     iterate();
+                    const moddedValue = await new Promise ((resolve, reject) => (mod(value, 2, (res) => resolve(res))));
+
+                    if (moddedValue) {
+                        summ = await new Promise ((resolve, reject) => (add(summ, value, (res) => resolve(res))));
+                    }
+                } else {
+                    cb(summ);
                 }
             })();
         }
 
-        let a = new AsyncArray([1, 2, undefined, true, 56]);
+        a = new AsyncArray(Array(1000).fill(2));
+        console.log(new Date().toLocaleString());
         getOddSum(a, cb);
-
-        a = new AsyncArray([]);
-        getOddSum(a, cb);
-
-        a = new AsyncArray(undefined);
-        getOddSum(a, cb);
-
-        a = new AsyncArray([2, 4, 6, 8, 10]);
-        getOddSum(a, cb);
-
-        a = new AsyncArray([3, 3, 4, 3]);
-        getOddSum(a, cb);
+    
     </script>
 </body>
 </html>
