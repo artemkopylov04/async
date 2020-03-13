@@ -1,7 +1,6 @@
 (() => {
     
     const {
-        AsyncArray,
         add,
         mod,
         equal,
@@ -27,23 +26,22 @@
     
     function getOddSumAsync(a, cb) {
 
-        const checkReady = () => {
+        const checkReady = (len) => {
             setTimeout(async () => {
-                if (await equalPromise(endedCounter, length)) {
+                if (await equalPromise(endedCounter, len)) {
                     cb(summ);
                 } else {
-                    checkReady();
+                    checkReady(len);
                 }
             }, 100);
         }
         
         let summ = 0;
         let transaction = false;
-        let length = 0;
         let endedCounter = 0;
         let startedCounter = 0;
     
-        async function iterate() {
+        async function iterate(len) {
             (async () => {
                 const value = await new Promise(resolve => a.get(startedCounter, (res) => resolve(res)));
         
@@ -63,17 +61,14 @@
     
             startedCounter = await addPromise(startedCounter, 1);
     
-            if (await lessPromise(startedCounter, length)) {
-                iterate();
+            if (await lessPromise(startedCounter, len)) {
+                iterate(len);
             } else {
-                checkReady();
+                checkReady(len);
             }
         }
     
-        a.length(res => {
-            length = res;
-            iterate();
-        });
+        a.length(len => iterate(len));
     }
 
     window.getOddSumAsync = getOddSumAsync;
