@@ -19,12 +19,11 @@
             console.log(res);
         }
 
-        for (let i = 0; i < [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].length; i++) {
+        for (let i = 0; i < 100; i++) {
             a = new AsyncArray(Array(100).fill(i));
             date = Date.now();
             getOddSumAsync(a, cb);
         }
-    
     </script>
 </body>
 </html>
