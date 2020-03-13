@@ -7,42 +7,23 @@
 </head>
 <body>
     <script src="shri-async-hw.js"></script>
+    <script src="getOddSumAsync.js"></script>
 
     <script>
-        const {
-            AsyncArray,
-            add,
-            mod,
-            equal
-        } = Homework;
+    
+        const { AsyncArray } = Homework;
+        let date;
 
         const cb = (res) => {
-            console.log(new Date().toLocaleString());
+            console.log((date - Date.now()) * -1 / 1000);
             console.log(res);
         }
 
-        const getOddSum = (array, cb) => {
-            let summ = 0;
-
-            (async function iterate() {
-                const value = await new Promise ((resolve, reject) => (array.pop((res) => resolve(res))));
-                if (value) {
-
-                    iterate();
-                    const moddedValue = await new Promise ((resolve, reject) => (mod(value, 2, (res) => resolve(res))));
-
-                    if (moddedValue) {
-                        summ = await new Promise ((resolve, reject) => (add(summ, value, (res) => resolve(res))));
-                    }
-                } else {
-                    cb(summ);
-                }
-            })();
+        for (let i = 0; i < [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].length; i++) {
+            a = new AsyncArray(Array(100).fill(i));
+            date = Date.now();
+            getOddSumAsync(a, cb);
         }
-
-        a = new AsyncArray(Array(1000).fill(2));
-        console.log(new Date().toLocaleString());
-        getOddSum(a, cb);
     
     </script>
 </body>
