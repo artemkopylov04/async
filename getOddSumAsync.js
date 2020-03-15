@@ -7,6 +7,8 @@
         less,
     } = Homework;
 
+/* Промисификация необходимых функций */
+
     const promisify = (fn) => {
         return (...args) => {
             return new Promise((resolve) => {
@@ -23,7 +25,19 @@
     const modPromise = promisify(mod);
     const equalPromise = promisify(equal);
     const lessPromise = promisify(less);
-    
+
+
+/*  Основная функция поиска нечетных чисел.
+    Создаем два счетчика, начатых итераций и законченных.
+    Законченные проверяем через setTimeout. (функция checkReady).
+    Начатые проверяем каждую итерацию с длинной всего массива.
+    Изменение суммы и счетчика конечных итераций нужно делать
+    по принципу транзакций, чтобы не было перезаписей асинхронных результатов,
+    для этого я ввожу булевый флаг, если он отрицательный -
+    откладываю задачу через setTimeout.
+    Экспортирую функцию через привязку к window.
+*/
+
     function getOddSumAsync(a, cb) {
 
         const checkReady = (len) => {
@@ -43,9 +57,11 @@
     
         async function iterate(len) {
             (async () => {
-                const value = await new Promise(resolve => a.get(startedCounter, (res) => resolve(res)));
+                const value = await new Promise(resolve => {
+                    a.get(startedCounter, (res) => resolve(res));
+                });
         
-                (async function changeGlobalVariables() {
+                (async function changeSummAndEndedCounter() {
                     if (!transaction) {
                         transaction = true;
                         if (await modPromise(value, 2)) {
@@ -54,7 +70,7 @@
                         endedCounter = await addPromise(endedCounter, 1);
                         transaction = false;
                     } else {
-                        setTimeout(changeGlobalVariables, 100);       
+                        setTimeout(changeSummAndEndedCounter, 100);       
                     }
                 })();
             })();

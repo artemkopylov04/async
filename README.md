@@ -14,3 +14,5 @@ function(array: AsyncArray, cb: (result: Number) => void) {
 
 }
 ```
+
+### Файл getOddSumAsync.js, комментарии внутри
